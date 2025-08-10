@@ -33,3 +33,9 @@ input:checked + .slider {
 input:checked + .slider::before {
   transform: translateX(26px);
 }
+
+body.dark-mode {
+  background: #121212;
+  color: #eee;
+}
+
