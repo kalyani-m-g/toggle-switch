@@ -1,35 +1,89 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" data-theme="">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pastel To-Do with Dark Mode</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Playfair+Display:wght@700&family=Great+Vibes&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script>
-    (function() {
-      const theme = localStorage.getItem('theme');
-      if (theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-      }
-    })();
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Theme Toggle Only</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+    }
+    [data-theme="dark"] {
+      --bg: #222222;
+      --text: #f0f0f0;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      transition: background 0.3s, color 0.3s;
+      display: flex;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 60px;
+      height: 30px;
+    }
+    .toggle-switch input {
+      display: none;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      background: #ccc;
+      border-radius: 30px;
+      inset: 0;
+      transition: background 0.3s;
+    }
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      background: #fff;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.3s;
+    }
+    input:checked + .slider {
+      background: #666;
+    }
+    input:checked + .slider::before {
+      transform: translateX(30px);
+    }
+  </style>
 </head>
 <body>
-  <div class="theme-toggle">
-    <button id="toggleBtn">Toggle Theme</button>
-  </div>
+  <label class="toggle-switch">
+    <input type="checkbox" id="themeToggle">
+    <span class="slider"></span>
+  </label>
 
-  <div class="todo-container">
-    <h1>To-Do</h1>
-    <div class="input-row">
-      <input id="taskInput" type="text" placeholder="Add a task…" />
-      <button id="addBtn">Add</button>
-    </div>
-    <ul id="taskList"></ul>
-  </div>
+  <script>
+    const toggle = document.getElementById('themeToggle');
+    const root = document.documentElement;
 
-  <div id="toast"></div>
-  <script src="script.js" defer></script>
+    // Apply saved theme or system preference on load
+    const saved = localStorage.getItem('theme');
+    if (saved) {
+      root.setAttribute('data-theme', saved);
+      toggle.checked = saved === 'dark';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      root.setAttribute('data-theme', 'dark');
+      toggle.checked = true;
+    }
+
+    toggle.addEventListener('change', () => {
+      const theme = toggle.checked ? 'dark' : 'light';
+      root.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    });
+  </script>
 </body>
 </html>
